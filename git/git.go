@@ -47,7 +47,7 @@ func GetShortStatus() string {
 func CreateCommit(commitMessage string) {
 	cmd := exec.Command("git", "commit", "-m", commitMessage)
 
-	err := cmd.Run()
+	_, err := cmd.Output()
 	if err != nil {
 		fmt.Println("Error running git commit:", err)
 		panic(err)
