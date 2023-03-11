@@ -2,6 +2,7 @@ package git
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -46,10 +47,10 @@ func GetShortStatus() string {
 
 func CreateCommit(commitMessage string) {
 	cmd := exec.Command("git", "commit", "-m", commitMessage)
-
-	_, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error running git commit:", err)
-		panic(err)
+		fmt.Println(string(output))
+		os.Exit(1)
 	}
+	fmt.Println("Commit successful!")
 }
