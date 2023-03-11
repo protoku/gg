@@ -91,10 +91,10 @@ func (m model) View() string {
 	if m.choice != "" {
 		git.CreateCommit(m.choice)
 
-		return quitTextStyle.Render(fmt.Sprintf("git commit - %s - Flawless Victory!", m.choice))
+		return quitTextStyle.Render(fmt.Sprintf("git commit ➜ %s ツ Flawless Victory!", m.choice))
 	}
 	if m.quitting {
-		return quitTextStyle.Render("Not hungry? That's cool.")
+		return quitTextStyle.Render("Not hungry? That’s cool.")
 	}
 	return "\n" + m.list.View()
 }
@@ -102,10 +102,15 @@ func (m model) View() string {
 func main() {
 	diff := git.GetStagedDiff()
 
+	if diff == "" {
+		fmt.Println("Nothing to commit!")
+		os.Exit(0)
+	}
+
 	items := []list.Item{
 		item(service.GetCommitMessage(diff)),
 		item(service.GetCommitMessage(diff)),
-		item(service.GetCommitMessage(diff)),
+		item(service.GetCommitMessage(git.GetShortStatus())),
 	}
 
 	const defaultWidth = 20

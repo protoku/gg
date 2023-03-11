@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -23,6 +24,7 @@ func GetCommitMessage(diff string) string {
 
 	jsonData, err := json.Marshal(request)
 	if err != nil {
+		fmt.Println("Error marshalling JSON:", err)
 		panic(err)
 	}
 
@@ -30,6 +32,7 @@ func GetCommitMessage(diff string) string {
 
 	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonData))
 	if err != nil {
+		fmt.Println("Error creating request:", err)
 		panic(err)
 	}
 
@@ -37,18 +40,21 @@ func GetCommitMessage(diff string) string {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Println("Error sending request:", err)
 		panic(err)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("Error reading response:", err)
 		panic(err)
 	}
 
 	var response Response
 	err = json.Unmarshal(body, &response)
 	if err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
 		panic(err)
 	}
 
