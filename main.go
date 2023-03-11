@@ -52,9 +52,10 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 }
 
 type model struct {
-	list     list.Model
-	choice   string
-	quitting bool
+	list      list.Model
+	choice    string
+	commiting bool
+	quitting  bool
 }
 
 func (m model) Init() tea.Cmd {
@@ -88,7 +89,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	if m.choice != "" {
+	if m.choice != "" && !m.commiting {
+		m.commiting = true
 		git.CreateCommit(m.choice)
 
 		return quitTextStyle.Render(fmt.Sprintf("git commit ➜ %s ツ Flawless Victory!", m.choice))
